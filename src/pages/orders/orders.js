@@ -1,40 +1,44 @@
 import { Component } from "react";
 import Order from '../../components/order/order';
-import axios from 'axios';
+import * as actions from '../../store/actions/index';
+import { connect } from "react-redux";
+import Spinner from '../../components/common/spinner/spinner'
+import { withRouter } from "react-router-dom";
 
 class Orders extends Component {
 
-    state = {
-        orders: [],
-        loading: true
-    }
-
     async componentDidMount() {
-        try {
-            const response = await axios.get('https://react-burger-builder-505e6-default-rtdb.firebaseio.com/orders.json');
-            console.log(response.data);
-            const fetchedOrders = []
-            for (let key in response.data) {
-                fetchedOrders.push({ ...response.data[key], id: key });
-            }
-            this.setState({ loading: false, orders: fetchedOrders });
-        } catch (error) {
-            this.setState({ loading: false });
-        }
+        this.props.fetchOrders(this.props.userId);
     }
 
     render() {
+        let orders = this.props.orders.map((order) => {
+            return <Order key={order.id} ingredients={order.ingredients} price={order.price} />
+        });
+        if (this.props.loading) {
+            orders = <Spinner />;
+        }
         return (
             <div>
-                {
-                    this.state.orders.map((order) => {
-                        return <Order key={order.id} ingredients={order.ingredients} price={order.price} />
-                    })
-                }
+                {orders}
             </div>
         );
     }
 
 }
 
-export default Orders;
+const mapStateToProps = (state) => {
+    return {
+        orders: state.order.orders,
+        loading: state.order.loading,
+        userId: state.auth.userId
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchOrders: (userId) => dispatch(actions.fetchOrders(userId))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Orders));

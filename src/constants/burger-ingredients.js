@@ -12,7 +12,7 @@ export const BURGER_INGREDIENTS_BUILD_CONTROLS = [
         type: 'sauce'
     },
     {
-        label: 'Aloo Patty',
-        type: 'alooPatty'
+        label: 'Patty',
+        type: 'patty'
     }
 ];
