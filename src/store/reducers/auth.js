@@ -7,7 +7,7 @@ const initialState = {
     error: false,
     loading: false,
     authRedirectPath: '/'
-}
+};
 
 const authReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -15,7 +15,7 @@ const authReducer = (state = initialState, action) => {
             return updateObject(state, { error: null, loading: true });
         case ACTION_TYPES.AUTH_SUCCESS:
             return updateObject(state, {
-                error: null,
+                error: false,
                 loading: false,
                 idToken: action.token,
                 userId: action.userId
