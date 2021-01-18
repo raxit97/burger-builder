@@ -8,7 +8,7 @@ import { withRouter } from "react-router-dom";
 class Orders extends Component {
 
     async componentDidMount() {
-        this.props.fetchOrders(this.props.userId);
+        this.props.fetchOrders(this.props.userId, this.props.idToken);
     }
 
     render() {
@@ -31,13 +31,14 @@ const mapStateToProps = (state) => {
     return {
         orders: state.order.orders,
         loading: state.order.loading,
-        userId: state.auth.userId
+        userId: state.auth.userId,
+        idToken: state.auth.idToken
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchOrders: (userId) => dispatch(actions.fetchOrders(userId))
+        fetchOrders: (userId, idToken) => dispatch(actions.fetchOrders(userId, idToken))
     }
 }
 

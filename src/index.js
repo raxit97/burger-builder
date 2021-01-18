@@ -8,8 +8,10 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import burgerBuilderReducer from './store/reducers/burger-builder';
 import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 import orderReducer from './store/reducers/order';
 import authReducer from './store/reducers/auth';
+import { orderSaga, watchAuthSaga, watchBurgerBuilderSaga } from './store/sagas/index'
 
 const rootReducer = combineReducers({
   burgerBuilder: burgerBuilderReducer,
@@ -17,7 +19,11 @@ const rootReducer = combineReducers({
   auth: authReducer
 });
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(rootReducer, applyMiddleware(thunk, sagaMiddleware));
+sagaMiddleware.run(watchAuthSaga);
+sagaMiddleware.run(watchBurgerBuilderSaga);
+sagaMiddleware.run(orderSaga);
 
 ReactDOM.render(
   <Provider store={store}>

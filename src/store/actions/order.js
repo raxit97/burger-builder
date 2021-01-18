@@ -1,15 +1,10 @@
-import axios from "../../utilities/axios-orders";
 import { ACTION_TYPES } from "./action-types";
 
-export const purchaseBurger = (orderData) => {
-    return async (dispatch, getState) => {
-        try {
-            dispatch(purchaseBurgerStart());
-            const response = await axios.post(`/orders.json?auth=${getState().auth.idToken}`, orderData);
-            dispatch(purchaseBurgerSuccess(response.data.name, orderData));
-        } catch (error) {
-            dispatch(purchaseBurgerFailed(error));
-        }
+export const purchaseBurger = (orderData, idToken) => {
+    return {
+        type: ACTION_TYPES.PURCHASE_BURGER,
+        orderData: orderData,
+        idToken: idToken
     };
 };
 
@@ -59,19 +54,10 @@ export const fetchOrdersStart = () => {
     };
 };
 
-export const fetchOrders = (userId) => {
-    return async (dispatch, getState) => {
-        try {
-            dispatch(fetchOrdersStart());
-            const queryParams = `?auth=${getState().auth.idToken}&orderBy="userId"&equalTo="${userId}"`;
-            const response = await axios.get(`/orders.json${queryParams}`);
-            const fetchedOrders = []
-            for (let key in response.data) {
-                fetchedOrders.push({ ...response.data[key], id: key });
-            }
-            dispatch(fetchOrdersSuccess(fetchedOrders));
-        } catch (error) {
-            dispatch(fetchOrdersFailed(error));
-        }
-    }
+export const fetchOrders = (userId, idToken) => {
+    return {
+        type: ACTION_TYPES.FETCH_ORDERS,
+        userId: userId,
+        idToken: idToken
+    };
 };
