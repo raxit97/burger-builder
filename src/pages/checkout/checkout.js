@@ -1,39 +1,36 @@
-import React, { Component, Suspense } from "react";
+import React, { Suspense } from "react";
 import { connect } from "react-redux";
 import { Route, Redirect, withRouter } from "react-router-dom";
 import CheckoutSummary from "../../components/order/checkout-summary/checkout-summary";
-// import ContactData from "./contact-data/contact-data";
 const ContactData = React.lazy(() => import('./contact-data/contact-data'));
 
-class Checkout extends Component {
+const Checkout = (props) => {
 
-    continueCheckout = () => {
-        this.props.history.replace('/checkout/contact-data');
+    const continueCheckout = () => {
+        props.history.replace('/checkout/contact-data');
     };
 
-    cancelCheckout = () => {
-        this.props.history.goBack();
+    const cancelCheckout = () => {
+        props.history.goBack();
     };
 
-    render() {
-        let summary = <Redirect to="/" />;
-        if (this.props.ingredients) {
-            const purchasedRedirect = this.props.purchased ? <Redirect to="/" /> : null;
-            summary = (
-                <div className="checkout">
-                    {purchasedRedirect}
-                    <CheckoutSummary checkoutCancelled={this.cancelCheckout}
-                        checkoutContinued={this.continueCheckout}
-                        ingredients={this.props.ingredients} />
-                    <Route path={this.props.match.url + '/contact-data'}
-                        render={() =>(
-                            <Suspense fallback={<div>Loading...</div>}><ContactData {...this.props} /></Suspense>
-                        )} />
-                </div>
-            )
-        }
-        return summary;
+    let summary = <Redirect to="/" />;
+    if (props.ingredients) {
+        const purchasedRedirect = props.purchased ? <Redirect to="/" /> : null;
+        summary = (
+            <div className="checkout">
+                {purchasedRedirect}
+                <CheckoutSummary checkoutCancelled={cancelCheckout}
+                    checkoutContinued={continueCheckout}
+                    ingredients={props.ingredients} />
+                <Route path={props.match.url + '/contact-data'}
+                    render={() => (
+                        <Suspense fallback={<div>Loading...</div>}><ContactData {...props} /></Suspense>
+                    )} />
+            </div>
+        )
     }
+    return summary;
 
 }
 

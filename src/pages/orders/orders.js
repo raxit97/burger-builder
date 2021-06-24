@@ -1,29 +1,27 @@
-import { Component } from "react";
+import { useEffect } from "react";
 import Order from '../../components/order/order';
 import * as actions from '../../store/actions/index';
 import { connect } from "react-redux";
 import Spinner from '../../components/common/spinner/spinner'
 import { withRouter } from "react-router-dom";
 
-class Orders extends Component {
+const Orders = (props) => {
 
-    async componentDidMount() {
-        this.props.fetchOrders(this.props.userId, this.props.idToken);
+    const { userId, idToken, fetchOrders } = props;
+    useEffect(() => {
+        fetchOrders(userId, idToken);
+    }, [userId, idToken, fetchOrders]);
+    let orders = props.orders.map((order) => {
+        return <Order key={order.id} ingredients={order.ingredients} price={order.price} />
+    });
+    if (props.loading) {
+        orders = <Spinner />;
     }
-
-    render() {
-        let orders = this.props.orders.map((order) => {
-            return <Order key={order.id} ingredients={order.ingredients} price={order.price} />
-        });
-        if (this.props.loading) {
-            orders = <Spinner />;
-        }
-        return (
-            <div>
-                {orders}
-            </div>
-        );
-    }
+    return (
+        <div>
+            {orders}
+        </div>
+    );
 
 }
 
