@@ -1,5 +1,9 @@
-.Modal {
+.position-fixed {
     position: fixed;
+}
+
+.Modal {
+    composes: position-fixed;
     z-index: 500;
     background-color: white;
     width: 70%;
@@ -12,12 +16,12 @@
     transition: all 0.3s ease-out;
 }
 
-.show-modal {
+.showModal {
     transform: translateY(0);
     opacity: 1;
 }
 
-.hide-modal {
+.hideModal {
     transform: translateY(100vh);
     opacity: 0;
 }
